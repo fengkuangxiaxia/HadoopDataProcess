@@ -34,7 +34,8 @@ public class HadoopDataProcess {
         
         JobConf conf2 = new JobConf(HadoopDataProcess.class);
         conf2.setJobName("DataProcess");
-        FileInputFormat.setInputPaths(conf2, new Path("tmp/part-00000"));
+        //FileInputFormat.setInputPaths(conf2, new Path("tmp/part-00000"));
+        FileInputFormat.addInputPaths(conf2, "tmp");        
         FileOutputFormat.setOutputPath(conf2, new Path(args[1]));
         conf2.setMapperClass(HadoopDataProcessMapper.class);
         conf2.setReducerClass(HadoopDataProcessReducer.class);
