@@ -11,9 +11,6 @@ public class PkFkComparator extends WritableComparator {
 		RecordKey key1 = (RecordKey)a;
 		RecordKey key2 = (RecordKey)b;
 		 //System.out.println("call compare");
-		 if(key1.keyId.equals(key2.keyId)){
-			return 0;	
-		 }else
-			return key1.keyId.compareTo(key2.keyId);
+		return key1.keyId.compareTo(key2.keyId);
 	 }
 }
