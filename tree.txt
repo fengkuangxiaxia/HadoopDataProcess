@@ -1,0 +1,90 @@
+=== Run information ===
+
+Scheme:weka.classifiers.trees.J48 -C 0.25 -M 2
+Relation:     BIG_DATA
+Instances:    1055041
+Attributes:   10
+              cport
+              sport
+              length
+              parameterNumber
+              hasAgent
+              visitTime
+              width
+              getRate
+              staticPageRate
+              isAttack
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+J48 pruned tree
+------------------
+
+getRate <= 0.994413: 1 (186917.0)
+getRate > 0.994413
+|   length <= 0: 1 (335.0)
+|   length > 0
+|   |   width <= 31
+|   |   |   sport <= 80
+|   |   |   |   visitTime <= 8
+|   |   |   |   |   width <= 0
+|   |   |   |   |   |   hasAgent = 0: 0 (1192.0)
+|   |   |   |   |   |   hasAgent = 1
+|   |   |   |   |   |   |   visitTime <= 2
+|   |   |   |   |   |   |   |   cport <= 12750
+|   |   |   |   |   |   |   |   |   cport <= 12388: 0 (150.0)
+|   |   |   |   |   |   |   |   |   cport > 12388: 1 (45.0)
+|   |   |   |   |   |   |   |   cport > 12750: 0 (608.0/25.0)
+|   |   |   |   |   |   |   visitTime > 2
+|   |   |   |   |   |   |   |   visitTime <= 4
+|   |   |   |   |   |   |   |   |   cport <= 12627
+|   |   |   |   |   |   |   |   |   |   cport <= 12538: 0 (61.0)
+|   |   |   |   |   |   |   |   |   |   cport > 12538: 1 (4.0)
+|   |   |   |   |   |   |   |   |   cport > 12627: 0 (382.0)
+|   |   |   |   |   |   |   |   visitTime > 4: 0 (1216.0)
+|   |   |   |   |   width > 0: 0 (22182.0/19.0)
+|   |   |   |   visitTime > 8: 0 (832435.0/3.0)
+|   |   |   sport > 80
+|   |   |   |   cport <= 2156
+|   |   |   |   |   visitTime <= 29
+|   |   |   |   |   |   staticPageRate <= 0.5: 1 (16.0)
+|   |   |   |   |   |   staticPageRate > 0.5: 0 (3.0)
+|   |   |   |   |   visitTime > 29: 0 (49.0)
+|   |   |   |   cport > 2156: 0 (2089.0)
+|   |   width > 31
+|   |   |   visitTime <= 180: 1 (206.0)
+|   |   |   visitTime > 180: 0 (7151.0)
+
+Number of Leaves  : 	18
+
+Size of the tree : 	35
+
+
+Time taken to build model: 44.78 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances     1054985               99.9947 %
+Incorrectly Classified Instances        56                0.0053 %
+Kappa statistic                          0.9998
+Mean absolute error                      0.0001
+Root mean squared error                  0.0072
+Relative absolute error                  0.0322 %
+Root relative squared error              1.8962 %
+Total Number of Instances          1055041     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 1         0          1         1         1          1        0
+                 1         0          1         1         1          1        1
+Weighted Avg.    1         0          1         1         1          1    
+
+=== Confusion Matrix ===
+
+      a      b   <-- classified as
+ 867466      5 |      a = 0
+     51 187519 |      b = 1
+
