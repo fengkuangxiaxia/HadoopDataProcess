@@ -24,8 +24,8 @@ public class HadoopDataCombine {
         FileOutputFormat.setOutputPath(conf1, new Path(args[1]));
         conf1.setMapperClass(HadoopDataCombineMapper.class);
         conf1.setReducerClass(HadoopDataCombineReducer.class);
-        conf1.setOutputKeyClass(Text.class);
-        conf1.setOutputValueClass(NullWritable.class);
+        conf1.setOutputKeyClass(NullWritable.class);
+        conf1.setOutputValueClass(Text.class);
         
         conf1.setMapOutputKeyClass(RecordKey.class);
         conf1.setMapOutputValueClass(Text.class);
