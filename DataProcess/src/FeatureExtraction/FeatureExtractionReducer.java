@@ -17,10 +17,10 @@ public class FeatureExtractionReducer extends MapReduceBase implements Reducer<T
                     Reporter reporter) throws IOException {
 		
 	    int visitTime = 0;
-	    visitTime = 0;
 	    int width = 0;
 	    int staticPage = 0;
 	    int getNumber = 0;
+	    int statusCode2xx = 0;
 
 	    ArrayList<String> urlFirst = new ArrayList<String>();
 	    try{
@@ -66,6 +66,16 @@ public class FeatureExtractionReducer extends MapReduceBase implements Reducer<T
 	    		catch(Exception e){
 	    			width = 0;
 	    		}
+	    		//状态码为2xx的百分比
+	    		try{
+	    			String statusCode = str0[13];
+	    			if(statusCode.startsWith("2")) {
+	    				statusCode2xx++;
+	    			}
+	    		}
+	    		catch(Exception e){
+	    			statusCode2xx = 0;
+	    		}
 	    	}
 	    }
 	    catch(Exception e1){
@@ -75,8 +85,9 @@ public class FeatureExtractionReducer extends MapReduceBase implements Reducer<T
 	    }
 	    double getRate = (double)getNumber / (double)visitTime;
 	    double staticPageRate = (double)staticPage / (double)visitTime;
+	    double statusCode2xxRate = (double)statusCode2xx / (double)visitTime;
 		
-	    output.collect(new Text(key), new Text(visitTime + "," + width + "," + getRate + "," + staticPageRate + "\tS"));
+	    output.collect(new Text(key), new Text(visitTime + "," + width + "," + getRate + "," + staticPageRate + "," + statusCode2xxRate + "\tS"));
  		
     }
 }

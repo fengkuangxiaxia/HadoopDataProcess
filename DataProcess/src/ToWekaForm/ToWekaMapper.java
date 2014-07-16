@@ -49,6 +49,7 @@ public class ToWekaMapper extends MapReduceBase implements Mapper<LongWritable, 
     	String width = "";
     	String getRate = "";
     	String staticPageRate = "";
+    	String statusCode2xxRate = "";
     	
     	try {
 	    	String[] temp = line.split(",", -1);
@@ -81,12 +82,13 @@ public class ToWekaMapper extends MapReduceBase implements Mapper<LongWritable, 
 	    	width = temp[25];
 	    	getRate = temp[26];
 	    	staticPageRate = temp[27];
+	    	statusCode2xxRate = temp[28];
     	}
     	catch (Exception e) {
     		;
     	}
 
-    	String attributes = depth + "," + parameterNumber + "," + hasAgent + "," + isAgentProgram + "," + visitTime + "," + width + "," + getRate + "," + staticPageRate;
+    	String attributes = depth + "," + parameterNumber + "," + hasAgent + "," + isAgentProgram + "," + visitTime + "," + width + "," + getRate + "," + staticPageRate + "," + statusCode2xxRate;
     	output.collect(new Text(time), new Text(attributes));
     }
 }

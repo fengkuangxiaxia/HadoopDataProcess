@@ -24,6 +24,29 @@ public class FeatureExtractionMapper extends MapReduceBase implements Mapper<Lon
 		str = str.replaceAll("%", "|");
 		String[] strArr = str.split(",");
 		
+		/*
+		time = strArr[0];
+    	gp = strArr[1];
+    	site = strArr[2];
+    	url = strArr[3];
+    	Type = strArr[4];
+    	size = strArr[5];
+    	referer = strArr[6];
+    	cip = strArr[7];
+    	cport = strArr[8];
+    	sip = strArr[9];
+    	sport = strArr[10];
+    	agent = strArr[11];
+    	returnTime = strArr[12];
+    	statusCode = strArr[13];
+    	unknown1 = strArr[14];
+    	unknown2 = strArr[15];
+    	returnType = strArr[16];
+    	returnSize = strArr[17];
+    	unknown3 = strArr[18];
+    	returnAgent = strArr[19];
+		*/
+		
 		//depth
 		int depth = 0;
 		try{
