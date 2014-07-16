@@ -5,6 +5,9 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.*;
 
 import java.io.IOException;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class FeatureExtractionMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> {
 
@@ -14,6 +17,7 @@ public class FeatureExtractionMapper extends MapReduceBase implements Mapper<Lon
                       OutputCollector<Text, Text> output, 
                       Reporter reporter) throws IOException {
  
+    	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String str = value.toString();
         //¥¶¿Ì
         str = str.replaceAll("[,]", " ");
@@ -46,6 +50,14 @@ public class FeatureExtractionMapper extends MapReduceBase implements Mapper<Lon
     	unknown3 = strArr[18];
     	returnAgent = strArr[19];
 		*/
+		
+		Date time;
+		try {
+			time = format.parse(strArr[0]);
+		} 
+		catch (ParseException e1) {
+			time = null;
+		}
 		
 		//depth
 		int depth = 0;
@@ -110,10 +122,10 @@ public class FeatureExtractionMapper extends MapReduceBase implements Mapper<Lon
 		
 		String sessionKey = "";
 		try {
-			sessionKey = strArr[2] + "," + strArr[7] + "," + strArr[11];
+			sessionKey = strArr[2] + "," + strArr[7] + "," + strArr[11] + "," + (time.getTime() / 1000 / 60 / 30);
 		}
 		catch (Exception e) {
-			sessionKey = strArr[2] + "," + strArr[7] + "," + " ";
+			sessionKey = strArr[2] + "," + strArr[7] + "," + " " + "," + (time.getTime() / 1000 / 60 / 30);
 		}
 		
 		str = str + "," + depth + "," + parameterNumber + "," + hasAgent + "," + isAgentProgram;

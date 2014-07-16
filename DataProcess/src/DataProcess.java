@@ -106,7 +106,7 @@ public class DataProcess {
         JC.addJob(job1);
         JC.addJob(job2);
         JC.addJob(job3);
-        //JC.addJob(job4);
+        JC.addJob(job4);
         
         //É¾³ýÊä³öÎÄ¼þ¼Ð
         FileSystem fstm = FileSystem.get(conf1);		
