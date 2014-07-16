@@ -24,20 +24,20 @@ public class FeatureExtractionMapper extends MapReduceBase implements Mapper<Lon
 		str = str.replaceAll("%", "|");
 		String[] strArr = str.split(",");
 		
-		//length
-		int length = 0;
+		//depth
+		int depth = 0;
 		try{
 			char url[] = strArr[3].toCharArray();
 			for(int i = 0; i < strArr[3].length(); ++i) {
 				if(url[i] == '/')
-					++length;
+					++depth;
 			}
 			if(strArr[3].indexOf("://") > 0) {
-				--length;
+				--depth;
 			}
 		}
 		catch(Exception e){
-			length = 0;
+			depth = 0;
 		}
 
 		//parameterNumber
@@ -53,16 +53,36 @@ public class FeatureExtractionMapper extends MapReduceBase implements Mapper<Lon
 		}
 	
 		//if exist agent
-		short agent = 0;
+		String hasAgent = "0";
 		try{
 			if(strArr[11] == null){
-				agent = 0;
+				hasAgent = "0";
 			}else{
-				agent = 1;
+				hasAgent = "1";
 			}
 		}
 		catch(Exception e){
-			agent = 0;
+			hasAgent = "0";
+		}
+		
+		//判断agent是不是程序
+		String[] susAgent = {"Python", "python", "Java", "spider", "curl", "fetcher", "PHP"};
+		String isAgentProgram = "0";
+		try {
+			if (strArr[11] != null) {
+				for (int i = 0; i < susAgent.length; i++) {
+					if (strArr[11].contains(susAgent[i])) {
+						isAgentProgram = "1";
+						break;
+					}
+				}
+			}
+			else {
+				isAgentProgram = "1";
+			}
+		}
+		catch (Exception e) {
+			isAgentProgram = "0";
 		}
 		
 		String sessionKey = "";
@@ -73,7 +93,7 @@ public class FeatureExtractionMapper extends MapReduceBase implements Mapper<Lon
 			sessionKey = strArr[2] + "," + strArr[7] + "," + " ";
 		}
 		
-		str = str + "," + length + "," + parameterNumber + "," + agent;
+		str = str + "," + depth + "," + parameterNumber + "," + hasAgent + "," + isAgentProgram;
 		output.collect(new Text(sessionKey), new Text(str));
     }
 }
