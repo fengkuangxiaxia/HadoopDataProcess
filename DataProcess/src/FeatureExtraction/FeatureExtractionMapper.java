@@ -24,8 +24,8 @@ public class FeatureExtractionMapper extends MapReduceBase implements Mapper<Lon
         for(int i = 0; i < 20; ++i) {
 			   str = str.replaceFirst("[|]",",");
         }
-        str = str.replaceAll("'", " ");
-		str = str.replaceAll("%", "|");
+        //str = str.replaceAll("'", " ");
+		//str = str.replaceAll("%", "|");
 		String[] strArr = str.split(",");
 		
 		/*
