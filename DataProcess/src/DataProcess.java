@@ -122,6 +122,11 @@ public class DataProcess {
             if(JC.allFinished()){  
                 System.out.println(JC.getSuccessfulJobs());  
                 JC.stop();  
+                
+                fstm.delete(combineTempOutputFold, true);
+        		fstm.delete(featureExtractionTempOutputFold, true);
+        		fstm.delete(joinTempOutputFold, true);
+                
                 return;  
             }  
             if(JC.getFailedJobs().size() > 0){  

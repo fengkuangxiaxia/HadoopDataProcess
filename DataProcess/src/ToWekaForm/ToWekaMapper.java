@@ -40,16 +40,16 @@ public class ToWekaMapper extends MapReduceBase implements Mapper<LongWritable, 
     	String unknown3 = "";
     	String returnAgent = "";
     	//单条特征
-    	String depth = "";
-    	String parameterNumber = "";
-    	String hasAgent = "";
-    	String isAgentProgram = "";
+    	int depth = 0;
+    	int parameterNumber = 0;
+    	int hasAgent = 0;
+    	int isAgentProgram = 0;
     	//session特征
-    	String visitTime = "";
-    	String width = "";
-    	String getRate = "";
-    	String staticPageRate = "";
-    	String statusCode2xxRate = "";
+    	int visitTime = 0;
+    	int width = 0;
+    	double getRate = 0.0;
+    	double staticPageRate = 0.0;
+    	double statusCode2xxRate = 0.0;
     	
     	try {
 	    	String[] temp = line.split(",", -1);
@@ -74,21 +74,138 @@ public class ToWekaMapper extends MapReduceBase implements Mapper<LongWritable, 
 	    	returnSize = temp[17];
 	    	unknown3 = temp[18];
 	    	returnAgent = temp[19];
-	    	depth = temp[20];
-	    	parameterNumber = temp[21];
-	    	hasAgent = temp[22];
-	    	isAgentProgram = temp[23];
-	    	visitTime = temp[24];
-	    	width = temp[25];
-	    	getRate = temp[26];
-	    	staticPageRate = temp[27];
-	    	statusCode2xxRate = temp[28];
+	    	depth = Integer.valueOf(temp[20]);
+	    	parameterNumber = Integer.valueOf(temp[21]);
+	    	hasAgent = Integer.valueOf(temp[22]);
+	    	isAgentProgram = Integer.valueOf(temp[23]);
+	    	visitTime = Integer.valueOf(temp[24]);
+	    	width = Integer.valueOf(temp[25]);
+	    	getRate = Double.valueOf(temp[26]);
+	    	staticPageRate = Double.valueOf(temp[27]);
+	    	statusCode2xxRate = Double.valueOf(temp[28]);
     	}
     	catch (Exception e) {
     		;
     	}
 
-    	String attributes = depth + "," + parameterNumber + "," + hasAgent + "," + isAgentProgram + "," + visitTime + "," + width + "," + getRate + "," + staticPageRate + "," + statusCode2xxRate;
-    	output.collect(new Text(time), new Text(attributes));
+    	//String attributes = depth + "," + parameterNumber + "," + hasAgent + "," + isAgentProgram + "," + visitTime + "," + width + "," + getRate + "," + staticPageRate + "," + statusCode2xxRate;
+    	//output.collect(new Text(time), new Text(attributes));
+    	if (judge(depth, parameterNumber, hasAgent, isAgentProgram, visitTime, width, getRate, staticPageRate, statusCode2xxRate) == -1) {
+    		output.collect(new Text(time), new Text(line));
+    	}
+    }
+    
+    private int judge(int depth, int parameterNumber, int hasAgent, int isAgentProgram, int visitTime, int width, double getRate, double staticPageRate, double statusCode2xxRate) {
+    	 if (isAgentProgram == 0) {
+    		if (visitTime <= 966) {
+    			if (visitTime <= 12) {
+    				if (depth <= 9) {
+    					return 1;
+    				}
+    				else {
+    					if (width <= 1) {
+    						if (parameterNumber <= 4) {
+    							return -1;
+    						}
+    						else {
+    							return 1;
+    						}
+    					}
+    					else {
+    						return 1;
+    					}
+    				}
+    			}
+    			else {
+    				return 1;
+    			}
+    		} 
+    		else {
+    			return -1;
+    		}
+    	 }
+    	 else {
+    		 if (visitTime <= 8) {
+    			 if (width <= 0) {
+    				 return (visitTime <= 1) ? 1 : -1;
+    			 }
+    			 else {
+    				 if (visitTime <= 1) {
+    					 if (depth <= 1) {
+    						 if (statusCode2xxRate <= 0.5) {
+    							 return 1;
+    						 }
+    						 else {
+    							 if (staticPageRate <= 0.5) {
+    								 return (parameterNumber <= 0) ? -1 : 1;
+    							 }
+    							 else {
+    								 return 1;
+    							 }
+    						 }
+    					 }
+    					 else {
+    						 return 1;
+    					 }
+    				 }
+    				 else {
+    					 if (statusCode2xxRate <= 0.833333) {
+    						 if (staticPageRate <= 0.833333) {
+    							 return 1;
+    						 }
+    						 else {
+    							 return (visitTime <= 2) ? 1 : -1;
+    						 }
+    					 }
+    					 else {
+    						 if (visitTime <= 5) {
+    							 if (depth <= 2) {
+    								 if (width <= 2) {
+    									 return 1;
+    								 }
+    								 else {
+    									 return (staticPageRate <= 0.375) ? -1 : 1;
+    								 }
+    							 }
+    							 else {
+    								 if (depth <= 5) {
+    									 if (width <= 1) {
+    										 if (visitTime <= 3) {
+    											 return (visitTime <= 2) ? -1 : 1;
+    										 }
+    										 else {
+    											 return (staticPageRate <= 0.875) ? 1 : -1;
+    										 }
+    									 }
+    									 else {
+    										 if (depth <= 3) {
+    											 return 1;
+    										 }
+    										 else {
+    											 if (width <= 2) {
+    												 return -1;
+    											 }
+    											 else {
+    												 return (staticPageRate <= 0.375) ? -1 : 1;
+    											 }
+    										 }
+    									 }
+    								 }
+    								 else {
+    									 return (width <= 1) ? 1 : -1;
+    								 }
+    							 }
+    						 }
+    						 else {
+    							 return -1;
+    						 }
+    					 }
+    				 }
+    			 }
+    		 }
+    		 else {
+    			 return -1;
+    		 }
+    	 }
     }
 }
