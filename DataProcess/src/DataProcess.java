@@ -136,7 +136,7 @@ public class DataProcess {
         		fstm.delete(joinTempOutputFold, true);
                 
         		try {
-	        		fstm.copyToLocalFile(outDir, new Path("/var/www/security/" + task_id));
+	        		fstm.copyToLocalFile(outDir, new Path("/var/www/security/public/result/" + task_id));
 	        		
 	        		String driver = "com.mysql.jdbc.Driver";
 	        		// URL指向要访问的数据库名security
