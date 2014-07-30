@@ -153,13 +153,12 @@ public class DataProcess {
 	        		Statement statement = conn.createStatement();
 	        		// 要执行的SQL语句
 	        		String sql = "update task set status = 1 where id = " + task_id;
-	        		ResultSet rs = statement.executeQuery(sql);  
-	        		rs.close();  
+	        		statement.executeUpdate(sql);   
 	        		statement.close();
 	        		conn.close();
         		}
         		catch (Exception e) {
-        			;
+        			System.out.println(e.toString());
         		}
                 return;  
             }  
@@ -183,13 +182,12 @@ public class DataProcess {
 	        		Statement statement = conn.createStatement();
 	        		// 要执行的SQL语句
 	        		String sql = "update task set status = -1 where id = " + task_id;
-	        		ResultSet rs = statement.executeQuery(sql);  
-	        		rs.close();  
+	        		statement.executeUpdate(sql);   
 	        		statement.close();
 	        		conn.close();
                 }
                 catch(Exception e){
-                	;
+                	System.out.println(e.toString());
                 }
                 return;  
             }  
