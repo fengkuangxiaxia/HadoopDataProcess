@@ -27,10 +27,15 @@ import ToWekaForm.ToWekaReducer;
 public class DataProcess {
 
 	public static void main(String[] args) throws IOException {
-		if(args.length != 2){
+		if(args.length < 2){
             System.err.println("Error!");
             System.exit(1);
         }
+		
+		String filename = "result";
+		if(args.length >= 3) {
+			filename = args[2];
+		}
 		
 		Path combineTempOutputFold = new Path("/combineTempOutputFold");
 		Path featureExtractionTempOutputFold = new Path("/featureExtractionTempOutputFold");
@@ -127,6 +132,17 @@ public class DataProcess {
         		fstm.delete(featureExtractionTempOutputFold, true);
         		fstm.delete(joinTempOutputFold, true);
                 
+        		try {
+	        		Process process = Runtime.getRuntime().exec("/home/hduser/hadoop/bin/hadoop fs -get /output/part-00000 /home/hduser/");
+	        		int exitValue = process.waitFor();  
+	                if (0 == exitValue) {  
+	                	process = Runtime.getRuntime().exec("mv /home/hduser/part-00000 /home/hduser/" + filename);
+	                	process = Runtime.getRuntime().exec("mv /home/hduser/" + filename + " /var/www/security/");
+	                }  
+        		}
+        		catch (Exception e) {
+        			;
+        		}
                 return;  
             }  
             if(JC.getFailedJobs().size() > 0){  
