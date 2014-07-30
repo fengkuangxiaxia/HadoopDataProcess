@@ -120,7 +120,6 @@ public class DataProcess {
 		fstm.delete(featureExtractionTempOutputFold, true);
 		fstm.delete(joinTempOutputFold, true);
         
-
 		Thread jcThread = new Thread(JC);  
         jcThread.start();  
         while(true){  
@@ -133,12 +132,7 @@ public class DataProcess {
         		fstm.delete(joinTempOutputFold, true);
                 
         		try {
-	        		Process process = Runtime.getRuntime().exec("/home/hduser/hadoop/bin/hadoop fs -get /output/part-00000 /home/hduser/");
-	        		int exitValue = process.waitFor();  
-	                if (0 == exitValue) {  
-	                	process = Runtime.getRuntime().exec("mv /home/hduser/part-00000 /home/hduser/" + filename);
-	                	process = Runtime.getRuntime().exec("mv /home/hduser/" + filename + " /var/www/security/");
-	                }  
+	        		fstm.copyToLocalFile(outDir, new Path("/var/www/security/" + filename));
         		}
         		catch (Exception e) {
         			;
