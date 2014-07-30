@@ -1,4 +1,8 @@
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -32,9 +36,9 @@ public class DataProcess {
             System.exit(1);
         }
 		
-		String filename = "result";
+		String task_id = "0";
 		if(args.length >= 3) {
-			filename = args[2];
+			task_id = args[2];
 		}
 		
 		Path combineTempOutputFold = new Path("/combineTempOutputFold");
@@ -44,7 +48,7 @@ public class DataProcess {
 		
 		//拼包M/P
         JobConf conf1 = new JobConf(DataProcess.class);
-        conf1.setJobName("Combine");
+        conf1.setJobName("Combine_" + task_id);
         FileInputFormat.addInputPaths(conf1, args[0]);        
         FileOutputFormat.setOutputPath(conf1, combineTempOutputFold);
         conf1.setMapperClass(CombineMapper.class);
@@ -60,7 +64,7 @@ public class DataProcess {
         
         //特征提取M/P
         JobConf conf2 = new JobConf(DataProcess.class);
-        conf2.setJobName("FeatureExtraction");
+        conf2.setJobName("FeatureExtraction_" + task_id);
         FileInputFormat.addInputPaths(conf2, combineTempOutputFold.toString());        
         FileOutputFormat.setOutputPath(conf2, featureExtractionTempOutputFold);
         conf2.setMapperClass(FeatureExtractionMapper.class);
@@ -74,7 +78,7 @@ public class DataProcess {
         
         //Session特征拼接到单条记录M/P
         JobConf conf3 = new JobConf(DataProcess.class);
-        conf3.setJobName("Join");
+        conf3.setJobName("Join_" + task_id);
         FileInputFormat.addInputPaths(conf3, featureExtractionTempOutputFold.toString());        
         FileOutputFormat.setOutputPath(conf3, joinTempOutputFold);
         conf3.setMapperClass(JoinMapper.class);
@@ -92,7 +96,7 @@ public class DataProcess {
         
         //去除无用的特征
         JobConf conf4 = new JobConf(DataProcess.class);
-        conf4.setJobName("ToWekaForm");
+        conf4.setJobName("ToWekaForm_" + task_id);
         FileInputFormat.addInputPaths(conf4, joinTempOutputFold.toString());        
         FileOutputFormat.setOutputPath(conf4, outDir);
         conf4.setMapperClass(ToWekaMapper.class);
@@ -107,7 +111,7 @@ public class DataProcess {
         
         job4.addDependingJob(job3);
         
-        JobControl JC = new JobControl("main");
+        JobControl JC = new JobControl("main_" + task_id);
         JC.addJob(job1);
         JC.addJob(job2);
         JC.addJob(job3);
@@ -132,7 +136,27 @@ public class DataProcess {
         		fstm.delete(joinTempOutputFold, true);
                 
         		try {
-	        		fstm.copyToLocalFile(outDir, new Path("/var/www/security/" + filename));
+	        		fstm.copyToLocalFile(outDir, new Path("/var/www/security/" + task_id));
+	        		
+	        		String driver = "com.mysql.jdbc.Driver";
+	        		// URL指向要访问的数据库名security
+	        		String url = "jdbc:mysql://127.0.0.1:3306/security";
+	        		// MySQL配置时的用户名
+	        		String user = "root";
+	        		// Java连接MySQL配置时的密码
+	        		String password = "12wedfvb";
+	        		// 加载驱动程序
+	        		Class.forName(driver);
+	        		// 连续数据库
+	        		Connection conn = DriverManager.getConnection(url, user, password);
+	        		// statement用来执行SQL语句
+	        		Statement statement = conn.createStatement();
+	        		// 要执行的SQL语句
+	        		String sql = "update task set status = 1 where id = " + task_id;
+	        		ResultSet rs = statement.executeQuery(sql);  
+	        		rs.close();  
+	        		statement.close();
+	        		conn.close();
         		}
         		catch (Exception e) {
         			;
@@ -142,6 +166,31 @@ public class DataProcess {
             if(JC.getFailedJobs().size() > 0){  
                 System.out.println(JC.getFailedJobs());  
                 JC.stop();  
+                
+                try{
+	                String driver = "com.mysql.jdbc.Driver";
+	        		// URL指向要访问的数据库名security
+	        		String url = "jdbc:mysql://127.0.0.1:3306/security";
+	        		// MySQL配置时的用户名
+	        		String user = "root";
+	        		// Java连接MySQL配置时的密码
+	        		String password = "12wedfvb";
+	        		// 加载驱动程序
+	        		Class.forName(driver);
+	        		// 连续数据库
+	        		Connection conn = DriverManager.getConnection(url, user, password);
+	        		// statement用来执行SQL语句
+	        		Statement statement = conn.createStatement();
+	        		// 要执行的SQL语句
+	        		String sql = "update task set status = -1 where id = " + task_id;
+	        		ResultSet rs = statement.executeQuery(sql);  
+	        		rs.close();  
+	        		statement.close();
+	        		conn.close();
+                }
+                catch(Exception e){
+                	;
+                }
                 return;  
             }  
         }  
